@@ -1,6 +1,5 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,abort
 from lxml import etree
-libro=etree.parse("libros.xml")
 app = Flask(__name__)
 
 @app.route('/')
@@ -28,9 +27,13 @@ def cuenta(palabra,letra):
     resultado=palabra.count(letra)
     return render_template("Cuenta.html",palabra=palabra,letra=letra,resultado=resultado)
 
-@app.route('libro/<int:codigo>')
+@app.route('/libro/<int:codigo>')
 def libro(codigo):
-    nombre=libro.xpath('/biblioteca/libro[codigo="%i"]/titulo/text()' % codigo)
-    autor=libro.xpath('/biblioteca/libro[codigo="%i"]/titulo/text()' % codigo)
-    return render_template("libro.html",nombre=nombre,autor=autor)
+    libro=etree.parse("libros.xml")
+    nombre=libro.xpath('/biblioteca/libro[codigo/text()="%i"]/titulo/text()' % codigo)
+    if nombre == []:
+        abort(404)
+    autor=libro.xpath('/biblioteca/libro[codigo/text()="%i"]/autor/text()' % codigo)
+    return render_template("libro.html",nombre=nombre[0],autor=autor[0])
+
 app.run(debug=True)
