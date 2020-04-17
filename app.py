@@ -30,7 +30,7 @@ def cuenta(palabra,letra):
 
 @app.route('libro/<int:codigo>')
 def libro(codigo):
-    Nombre=libro.xpath('/biblioteca/libro[codigo="%i"]/titulo/text()' % codigo)
+    nombre=libro.xpath('/biblioteca/libro[codigo="%i"]/titulo/text()' % codigo)
     autor=libro.xpath('/biblioteca/libro[codigo="%i"]/titulo/text()' % codigo)
-    return render_template("")
+    return render_template("libro.html",nombre=nombre,autor=autor)
 app.run(debug=True)
